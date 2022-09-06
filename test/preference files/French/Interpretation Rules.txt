@@ -1,0 +1,183 @@
+# "Interpretation Rules.txt"
+
+# Interprétation de métrage automatique Adobe After Effects
+
+# les lignes vierges sont autorisées et les lignes commençant par "#" sont des commentaires
+
+# format de base d'une règle stricte : {exigences de concordance} = {interprétation définie}
+# format de base d'une règle souple : {exigences de concordance} ~ {interprétation définie}
+
+# + pour chaque règle concordante, l'interprétation est définie ; les caractères génériques ("*") sont autorisés
+#	de part et d’autre ; la correspondance de caractère générique correspond à n’importe quel caractère, le jeu de caractères génériques ne définit rien
+# + plusieurs règles peuvent concorder, les plus récentes remplaçant les plus anciennes
+# + toutes les règles sont balayées dans l'ordre, une par ligne
+# + les règles sont appliquées après lecture du format des pixels, des informations alpha et des informations d'identification de trame
+#	informations lues à partir d’un fichier
+
+# + les règles logicielles n’écraseront pas les valeurs explicitement spécifiées par le fichier
+#	format ou défini par les règles précédentes
+
+# largeur, hauteur, fréquence des images, type de fichier, codec =
+#	format/nom des pixels, ordre de trame, cadence conforme, interpolation alpha, code de profil icc
+#	ou description du profil (l’un ou l’autre), lumière linéaire
+
+# la largeur et la hauteur sont des nombres entiers
+# la cadence est un nombre décimal
+# le fichier est du type quatre caractères entre guillemets (FourCC)
+# le codec (applicable pour QT et AVI uniquement) est également du type FourCC
+
+# pour rechercher le type de fichier et/ou le code de profil FourCC du codec pour un type particulier de métrage,
+#	opt-clic (Mac) ou alt-clic (Windows) sur le métrage dans la fenêtre Projet ;
+#	les codes FourCC s’affichent sur la dernière ligne de texte près de la vignette
+
+# le format des pixels est un rapport d'entiers (ex. : 10/11)
+#	éventuellement suivi d’un nom pour ce taux (ex. 10/11/"Mon aspect")
+# Dans After Effects CS4 (version 9), nous avons modifié le format des pixels pour plusieurs formats communs :
+#	D1/DV NTSC de 648/720 (0,9) à 10/11 (environ 0,9091)
+#	D1/DV NTSC Grand écran de 6/5 (1,2) à 40/33 (environ 1,2121)
+#	D1/DV PAL de 768/720 (1,07) à 768/702 (environ 1,0940)
+#	D1/DV PAL Grand écran de 64/45 (1,42) à 1 024/702 (environ 1,4587)
+
+# l'ordre de trame est un caractère unique, (F = image, U = trame supérieure ou L = trame inférieure)
+# la cadence conforme est un nombre décimal
+# interpolation alpha : (I = ignorer, S = directe, P = prémult./noir, W = prémult./blanc)
+#	interpolation alpha ignorée pour le métrage sans couche alpha
+
+# Le profil ICC est précisé par le code de profil (FourCC) ou par
+#	 description du profil qui est une chaîne entre guillemets avec 255 caractères max. plus les guillemets
+
+# Les codes de profil pris en charge sont les suivants :
+#	- profil de l’espace de travail : "wRGB"
+#	- profil incorporé : "embe"
+#	- conserver les valeurs RVB : "pRGB" (revient à cocher la case Conserver les valeurs RVB dans la boîte de dialogue Interpréter le métrage)
+#	- sRGB : "sRGB"
+#	- RVB Adobe : "AS98"
+#	- Profil de film Kodak 5218 : "ginp"
+#	- SDTV NTSC : "r6nf" (primaires SMPTE RP 145 et TRC ITU-R Rec. 709. Le noir est codé à 0 et le blanc à 1.)
+#	- SDTV NTSC 16-235 : "r6ns" (primaires SMPTE RP 145 et TRC ITU-R Rec. 709. Le noir est codé à 16/255 et le blanc à 235/255.)
+#	- SDTV PAL : "r6pf" (primaires EBU Tech. 3213 et TRC ITU-R Rec. 709 =. Le noir est codé à 0 et le blanc à 1.)
+#	- SDTV PAL 16-235 : "r6ps" (primaires EBU Tech. 3213 et TRC ITU-R Rec. 709. Le noir est codé à 16/255 et le blanc à 235/255.)
+#	- HDTV (Rec. 709) : "r7hf" (primaires et TRC ITU-R Rec. 709. Le noir est codé à 0 et le blanc à 1.)
+#	- HDTV (Rec. 709) 16-235 : "r7hs" (primaires et TRC ITU-R Rec. 709. Le noir est codé à 16/255 et le blanc à 235/255.)
+
+# La description du profil peut être consultée dans l’interface utilisateur (infos de la vignette de la fenêtre Projet) ou dans
+# utilitaire chromatique tel que ColorSync ou est défini par l’utilisateur lors de la création d’un profil personnalisé
+
+# la lumière linéaire est un nombre entier (0 = Non, 1 = Oui, 2 = Oui pour les métrages 32 bpc)
+
+# règle souple ; suppose que ATSC 704 x 480 a l'aspect D1 dans tout format
+704, 480, 29.97, *, * ~ 10/11, *, *, *, *, *
+
+# Règles NTSC
+# règle souple ; suppose que les formats 720 x 480 29,97 ips sont en NTSC DV (qualité inférieure, NTSC D1/DV)
+# règle souple ; suppose que les formats 720 x 480 de toute cadence ont un format de pixels NTSC DV/D1
+# règle souple ; suppose que les formats 720 x 486 de toute cadence ont un format de pixels NTSC DV/D1
+# règle souple ; suppose que les formats natifs MediaCore 720 x 480 et 720 x 486 sont en NTSC SDTV
+# règle souple ; suppose que les fichiers 720 x 480 DVCPro50 sont en NTSC SDTV
+720, 480, 29.97, *, * ~ 10/11, L, *, *, *, *
+720, 480, *, *, * ~ 10/11, *, *, *, *, *
+720, 486, *, *, * ~ 10/11, *, *, *, *, *
+720, 480, *, *, "dvc " ~ *, *, *, *, "r6nf", *
+720, 486, *, *, "v210" ~ *, *, *, *, "r6nf", *
+720, 486, *, *, "UYVY" ~ *, *, *, *, "r6nf", *
+720, 486, *, *, "2vuy" ~ *, *, *, *, "r6nf", *
+720, 480, *, *, "dv5n" ~ *, *, *, *, "r6nf", *
+
+# règles PAL
+# règle souple ; suppose que les formats 720 x 576 25 ips sont tous en PAL DV (qualité inférieure, PAL D1/DV)
+# règle souple ; suppose que les formats 720 x 576 de toute cadence ont un format de pixels PAL DV/D1
+# règle souple ; suppose que les formats natifs MediaCore 720 x 576 sont en PAL SDTV
+# règle souple ; suppose que les fichiers 720 x 576 DVCPro50 sont en PAL SDTV
+720, 576, 25, *, * ~ 768/702, L, *, *, *, *
+720, 576, *, *, * ~ 768/702, *, *, *, *, *
+720, 576, *, *, "dvcp" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "v210" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "UYVY" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "2vuy" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "dv5p" ~ *, *, *, *, "r6pf", *
+
+# règles D16/D4
+# règles souples ; suppose que les formats 2 880 x 2 048, 1 440 x 1 024 de toute cadence ont un format de pixels D16/D4
+# supprimé dans 7.0 -- supprimez les commentaires pour réactiver
+# 2880, 2048, *, *, * ~ 128/135, *, *, *, *, *
+# 1440, 1024, *, *, * ~ 128/135, *, *, *, *, *
+
+# règles HD/HDV
+# règle souple ; Panasonic Varicam correspond à 960 x 720
+# règle souple ; Sony HDV correspond à 1 440 x 1 080, trame supérieure en premier
+# règle souple ; suppose que les formats natifs MediaCore HD sont en HDTV Full Swing
+960, 720, *, *, * ~ 1280/960/"HDV", *, *, *, *, *
+1440, 1080, 25, *, * ~ 1280/960/"HDV", U, *, *, *, *
+1440, 1080, 29.97, *, * ~ 1280/960/"HDV", U, *, *, *, *
+1280, 720, *, *, "v210" ~ *, *, *, *, "r7hf", *
+1280, 720, *, *, "UYVY" ~ *, *, *, *, "r7hf", *
+1280, 720, *, *, "2vuy" ~ *, *, *, *, "r7hf", *
+1920, 1080, *, *, "v210" ~ *, *, *, *, "r7hf", *
+1920, 1080, *, *, "UYVY" ~ *, *, *, *, "r7hf", *
+1920, 1080, *, *, "2vuy" ~ *, *, *, *, "r7hf", *
+
+# règle souple; suppose que les formats HDV sont au format HDTV full swing
+*, *, *, *, "hdv1" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv2" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv3" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv4" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv5" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv6" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv7" ~ *, *, *, *, "r7hf", *
+
+# suppose que NTSC DV a l'aspect D1, trame inférieure
+# <règles obsolètes -- remplacées par les règles souples ci-dessus>
+# 720, 480, 29.97, "MooV", "dvc " = 10/11, L, *, *, *, *
+# 720, 480, 29.97, "MooV", "dvpn" = 10/11, L, *, *, *, *
+# 720, 480, 29.97, ".AVI", "dvsd" = 10/11, L, *, *, *, *
+
+# règle souple : balisez les fichiers Cineon avec le profil Kodak 5218
+# supprimez le commentaire ci-dessous pour activer
+# *, *, *, "sDPX", * ~ *, *, *, *, "ginp", *
+
+# règle souple : balisez momentanément tous les fichiers Cineon avec le profil d'espace de travail RVB
+*, *, *, "sDPX", * ~ *, *, *, *, "wRGB", *
+
+# règle pour rendre les fichiers bruts red disponibles en tant que Rec709
+# avec données flottantes 32 bits gamma
+*, *, *, "R3D ", * ~ *, *, *, *, "r7hf", 0
+
+# cette règle souple doit figurer en dernière place dans la liste des règles souples
+# règle souple : balisez tout le métrage non balisé avec un profil sRVB
+*, *, *, *, * ~ *, *, *, *, "sRGB", *
+
+# règles spécifiques au matériel et au format
+
+# Média 100 640 x 480 à pixels carrés, trame supérieure en premier
+640, 480, 29.97, "MooV", "dtmt" = 1/1, U, *, *, *, *
+
+# Média 100 finition 720 x 486 à pixels D1, trame inférieure en premier
+720, 486, 29.97, "MooV", "dtNT" = 10/11, L, *, *, *, *
+
+# suppose que Matrox DigiSuite correspond au format de pixels D1, trame inférieure en premier
+720, 486, 29.97, ".AVI", "MJPG" = 10/11, L, *, *, *, *
+
+# suppose que Pinnacle Targa 3000 YUV correspond au format de pixels D1, trame inférieure en premier
+720, 486, 29.97, ".AVI", "UYVY" = 10/11, L, *, *, *, *
+
+# Média 100 Mac 720 x 486 identifié par des trames par Média 100, et
+# peut être de qualité supérieure ou inférieure selon le matériel, mais
+# ne mettez pas en commentaire la ligne suivante pour imposer D1, trame inférieure en premier
+# 720, 486, 29.97, "MooV", "dtmt" = 10/11, L, *, *, *, *
+
+# Avid 640 x 480 à pixels carrés, trame supérieure en premier
+640, 480, *, "MooV", "avr " = 1/1, U, *, *, *, *
+
+# Codec Avid Meridien NTSC, trame inférieure en premier
+720, 486, 29.97, *, "AVDJ" = 10/11, L, *, *, *, *
+720, 486, 29.97, *, "AVUI" = 10/11, L, *, *, *, *
+
+# Electric Image crée des fichiers alpha directs
+*, *, *, "EID2", * = *, *, *, S, *, *
+
+# OpenEXR est prémultiplié par convention
+*, *, *, "oEXR", * ~ *, *, *, P, *, *
+
+# ajoute uniquement un format de pixels personnalisé dans le menu des boîtes de dialogue Paramètres de composition et Interpréter le métrage
+# boîtes de dialogue -- ne mettez pas en commentaire la ligne suivante pour la tester
+# 0, 0, 0, "0000", * = 10/11/"Custom Aspect", *, *, *, *, *

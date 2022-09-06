@@ -1,0 +1,27 @@
+<?xml version='1.0'?>
+<prop.map version='4'>
+<prop.list>
+<prop.pair>
+<key>BuiltIns</key>
+<array>
+<array.type><ustring/></array.type>
+<ustring>Par défaut</ustring>
+<ustring>Révision</ustring>
+<ustring>Formation</ustring>
+<ustring>Petit écran</ustring>
+<ustring>Usuel</ustring>
+<ustring>Bibliothèques</ustring>
+<ustring>Tous les panneaux</ustring>
+<ustring>Contenu animé</ustring>
+<ustring>Objets graphiques essentiels</ustring>
+<ustring>Couleur</ustring>
+<ustring>Effets</ustring>
+<ustring>Minimum</ustring>
+<ustring>Peinture</ustring>
+<ustring>Texte</ustring>
+<ustring>Suivi de cible</ustring>
+<ustring>Panneaux non ancrés</ustring>
+</array>
+</prop.pair>
+</prop.list>
+</prop.map>

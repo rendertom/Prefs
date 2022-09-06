@@ -1,0 +1,27 @@
+<?xml version='1.0'?>
+<prop.map version='4'>
+<prop.list>
+<prop.pair>
+<key>BuiltIns</key>
+<array>
+<array.type><ustring/></array.type>
+<ustring>Predeterminado</ustring>
+<ustring>Revisar</ustring>
+<ustring>Formación</ustring>
+<ustring>Pantalla pequeña</ustring>
+<ustring>Estándar</ustring>
+<ustring>Bibliotecas</ustring>
+<ustring>Todos los paneles</ustring>
+<ustring>Animación</ustring>
+<ustring>Essential Graphics</ustring>
+<ustring>Color</ustring>
+<ustring>Efectos</ustring>
+<ustring>Mínima</ustring>
+<ustring>Pintar</ustring>
+<ustring>Texto</ustring>
+<ustring>Seguim. movim.</ustring>
+<ustring>Paneles desacoplados</ustring>
+</array>
+</prop.pair>
+</prop.list>
+</prop.map>
