@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PremiereData Version="3">
+	<Preferences ObjectRef="1"/>
+	<Preferences ObjectID="1" ClassID="f06902ec-e637-4744-a586-c26202143e36" Version="30">
+		<Properties Version="1">
+			<BE.Prefs.ScratchDisks.FirstVideoCaptureFolder>SameAsProject</BE.Prefs.ScratchDisks.FirstVideoCaptureFolder>
+			<BE.Prefs.ScratchDisks.FirstAudioCaptureFolder>SameAsProject</BE.Prefs.ScratchDisks.FirstAudioCaptureFolder>
+			<BE.Prefs.ScratchDisks.FirstVideoPreviewFolder>SameAsProject</BE.Prefs.ScratchDisks.FirstVideoPreviewFolder>
+			<BE.Prefs.ScratchDisks.FirstAudioPreviewFolder>SameAsProject</BE.Prefs.ScratchDisks.FirstAudioPreviewFolder>
+			<BE.Prefs.ScratchDisks.FirstDVDEncodingFolder>SameAsProject</BE.Prefs.ScratchDisks.FirstDVDEncodingFolder>
+			<BE.Prefs.Audio.MixdownType>3</BE.Prefs.Audio.MixdownType>
+			<BE.Prefs.DefaultSourceChannelMapping>3</BE.Prefs.DefaultSourceChannelMapping>
+		</Properties>
+	</Preferences>
+</PremiereData>

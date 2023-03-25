@@ -1,0 +1,39 @@
+English:
+Adobe After Effects 22.6 MC Prefs
+Adobe After Effects 22.6 Prefs-indep-composition.txt
+Adobe After Effects 22.6 Prefs-indep-general.txt
+Adobe After Effects 22.6 Prefs-indep-output.txt
+Adobe After Effects 22.6 Prefs-indep-render.txt
+Adobe After Effects 22.6 Prefs-paint.txt
+Adobe After Effects 22.6 Prefs-text.txt
+Adobe After Effects 22.6 Prefs.txt
+
+French (Français):
+Adobe After Effects 22.6 MC Prefs
+Adobe After Effects 22.6 Préfs-indep-composition.txt
+Adobe After Effects 22.6 Préfs-indep-general.txt
+Adobe After Effects 22.6 Préfs-indep-output.txt
+Adobe After Effects 22.6 Préfs-indep-render.txt
+Adobe After Effects 22.6 Préfs-paint.txt
+Adobe After Effects 22.6 Préfs-text.txt
+Adobe After Effects 22.6 Préfs.txt
+
+Russian (Pуccкий):
+Adobe After Effects 22.6 Установки-indep-composition.txt
+Adobe After Effects 22.6 Установки-indep-general.txt
+Adobe After Effects 22.6 Установки-indep-output.txt
+Adobe After Effects 22.6 Установки-indep-render.txt
+Adobe After Effects 22.6 Установки-paint.txt
+Adobe After Effects 22.6 Установки-text.txt
+Adobe After Effects 22.6 Установки.txt
+Adobe After Effects 22.6 MC Prefs
+
+Spanish (Español):
+Adobe After Effects 22.6 MC Prefs
+Preferencias Adobe After Effects 22.6-indep-composition.txt
+Preferencias Adobe After Effects 22.6-indep-general.txt
+Preferencias Adobe After Effects 22.6-indep-output.txt
+Preferencias Adobe After Effects 22.6-indep-render.txt
+Preferencias Adobe After Effects 22.6-paint.txt
+Preferencias Adobe After Effects 22.6-text.txt
+Preferencias Adobe After Effects 22.6.txt

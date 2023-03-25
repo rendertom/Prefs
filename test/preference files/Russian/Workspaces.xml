@@ -1,0 +1,27 @@
+<?xml version='1.0'?>
+<prop.map version='4'>
+<prop.list>
+<prop.pair>
+<key>BuiltIns</key>
+<array>
+<array.type><ustring/></array.type>
+<ustring>По умолчанию</ustring>
+<ustring>Просмотр</ustring>
+<ustring>Обучение</ustring>
+<ustring>Маленький экран</ustring>
+<ustring>Стандартный</ustring>
+<ustring>Библиотеки</ustring>
+<ustring>Все панели</ustring>
+<ustring>Анимация</ustring>
+<ustring>Essential Graphics</ustring>
+<ustring>Цвет</ustring>
+<ustring>Эффекты</ustring>
+<ustring>Минимальная</ustring>
+<ustring>Раскрасить</ustring>
+<ustring>Текст</ustring>
+<ustring>Трассировка движения</ustring>
+<ustring>Непристыкованные панели</ustring>
+</array>
+</prop.pair>
+</prop.list>
+</prop.map>

@@ -1,0 +1,29 @@
+<?xml version='1.0'?>
+<prop.map version='4'>
+<prop.list>
+<prop.pair>
+<key>DialogInfo</key>
+<prop.list>
+</prop.list>
+</prop.pair>
+<prop.pair>
+<key>MonitorInfo</key>
+<prop.list>
+<prop.pair>
+<key>Monitor-0</key>
+<array>
+<array.type><int type='signed' size='32'/></array.type>
+<int type='signed' size='32'>0</int>
+<int type='signed' size='32'>25</int>
+<int type='signed' size='32'>1680</int>
+<int type='signed' size='32'>950</int>
+</array>
+</prop.pair>
+<prop.pair>
+<key>NumMonitors</key>
+<int type='unsigned' size='32'>1</int>
+</prop.pair>
+</prop.list>
+</prop.pair>
+</prop.list>
+</prop.map>

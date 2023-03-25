@@ -1,0 +1,1 @@
+# Text File Version 1.1# After Effects Preferences["Composition Pref Section"]	"4up Column Width (0.0 <= val <= 1.0)" = "0.300000"	"4up Row Height (0.0 <= val <= 1.0)" = "0.350000"	"Default Comp Layout 2D Only" = "0"	"Default Comp Layout Mixed 2D / 3D" = "0"

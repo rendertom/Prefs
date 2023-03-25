@@ -1,0 +1,183 @@
+# "Interpretation Rules.txt"
+
+# Adobe After Effects Automatic Footage Interpretation
+
+# blank lines are allowed, and lines beginning with "#" are comments
+
+# basic format of a hard rule: {match requirements} = {set interpretation}
+# basic format of a soft rule: {match requirements} ~ {set interpretation}
+
+# + for each rule that matches, the interpretation is set; wild-cards ("*") allowed
+#	on both sides; wildcard match matches anything, wildcard set sets nothing
+# + multiple rules are allowed to match, later matches override earlier matches
+# + all rules are scanned in order, one rule per line
+# + rules are applied after pixel aspect ratio, alpha information, and field label
+#	information is read from a file
+
+# + soft rules will not override values that are specified explicitly by the file
+#	format or set by previous rules
+
+# width, height, frame-rate, file-type, codec =
+#	pixel aspect ratio/name, field order, conform frame-rate, alpha interp, icc profile code
+#	or profile description (one or the other), linear light
+
+# width & height are integer numbers
+# frame-rate is a decimal number
+# file-type is four characters in quotes (FourCC)
+# codec (applicable for QT & AVI only) is also FourCC
+
+# to find out the file-type and/or codec FourCC's for a specific type of footage,
+#	opt-click (Mac) or alt-click (Windows) on the footage in the project window;
+#	the FourCC codes will appear in the last line of text by the thumbnail
+
+# the pixel aspect ratio is a ratio of integers (e.g. 10/11)
+#	optionally followed by a name for that ratio (e.g. 10/11/"My Aspect")
+# In After Effects CS4 (v9) we modified the Pixel Aspect Ratio's for several common formats:
+#	D1/DV NTSC From 648/720 (0.9) to 10.0/11.0 (about 0.9091)
+#	D1/DV NTSC Widescreen from 6/5 (1.2) to 40/33 (about 1.2121)
+#	D1/DV PAL From 768/720 (1.07) to 768/702 (about 1.0940)
+#	D1/DV PAL Widescreen from 64/45 (1.42) to 1024.0/702.0 (about 1.4587)
+
+# the field order is a single character, (F=frame, U=upper field, or L=lower field)
+# the conform frame-rate is a decimal number
+# alpha interp: (I=ignore, S=straight, P=premul/black, W=premul/white)
+#	alpha interp is ignored for footage without an alpha channel
+
+# ICC profile is specified either by profile code which is FourCC or by
+#	profile description which is a string in quotes with at most 255 characters plus quotes
+
+# The supported profile codes are:
+#	- working space profile: "wRGB"
+#	- embedded profile: "embe"
+#	- preserve RGB: "pRGB" (this does exactly what Preserve RGB checkbox does in Interpret Footage dialog)
+#	- sRGB: "sRGB"
+#	- Adobe RGB: "AS98"
+#	- Kodak 5218 film profile: "ginp"
+#	- SDTV NTSC: "r6nf" (SMPTE RP 145 primaries and ITU-R Rec. 709 TRCs. Black is encoded at 0 and White is encoded at 1.)
+#	- SDTV NTSC 16-235: "r6ns" (SMPTE RP 145 primaries and ITU-R Rec. 709 TRCs. Black is encoded at 16/255 and White is encoded at 235/255.)
+#	- SDTV PAL: "r6pf" (EBU Tech. 3213 primaries and ITU-R Rec. 709 TRCs. Black is encoded at 0 and White is encoded at 1.)
+#	- SDTV PAL 16-235: "r6ps" (EBU Tech. 3213 primaries and ITU-R Rec. 709 TRCs. Black is encoded at 16/255 and White is encoded at 235/255.)
+#	- HDTV (Rec. 709): "r7hf" (ITU-R Rec. 709 primaries and TRCs. Black is encoded at 0 and White is encoded at 1.)
+#	- HDTV (Rec. 709) 16-235: "r7hs" (ITU-R Rec. 709 primaries and TRCs. Black is encoded at 16/255 and White is encoded at 235/255.)
+
+# The profile description can be looked up either in UI (project window thumbnail info) or in a
+# color utility such as ColorSync or it is user-defined when creating a custom profile
+
+# linear light is an integer (0=Off, 1=On, 2=On for 32 bpc footage)
+
+# soft rule; assume ATSC 704x480 in any format is D1 aspect
+704, 480, 29.97, *, * ~ 10/11, *, *, *, *, *
+
+# NTSC rules
+# soft rule; assume 720x480 29.97fps formats are DV NTSC (lower, NTSC D1/DV aspect)
+# soft rule; assume 720x480 formats with all frame rates have NTSC DV/D1 pixel aspect ratio
+# soft rule; assume 720x486 formats with all frame rates have NTSC DV/D1 pixel aspect ratio
+# soft rule; assume 720x480 and 720x486 native mediacore formats are SDTV NTSC
+# soft rule; assume 720x480 DVCPro50 files are SDTV NTSC
+720, 480, 29.97, *, * ~ 10/11, L, *, *, *, *
+720, 480, *, *, * ~ 10/11, *, *, *, *, *
+720, 486, *, *, * ~ 10/11, *, *, *, *, *
+720, 480, *, *, "dvc " ~ *, *, *, *, "r6nf", *
+720, 486, *, *, "v210" ~ *, *, *, *, "r6nf", *
+720, 486, *, *, "UYVY" ~ *, *, *, *, "r6nf", *
+720, 486, *, *, "2vuy" ~ *, *, *, *, "r6nf", *
+720, 480, *, *, "dv5n" ~ *, *, *, *, "r6nf", *
+
+# PAL rules
+# soft rule; assume 720x576 25fps formats are DV PAL (lower, PAL D1/DV aspect)
+# soft rule; assume 720x576 formats with all frame rates have PAL DV/D1 pixel aspect ratio 
+# soft rule; assume 720x576 native mediacore formats are SDTV PAL
+# soft rule; assume 720x576 DVCPro50 files are SDTV PAL
+720, 576, 25, *, * ~ 768/702, L, *, *, *, *
+720, 576, *, *, * ~ 768/702, *, *, *, *, *
+720, 576, *, *, "dvcp" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "v210" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "UYVY" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "2vuy" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "dv5p" ~ *, *, *, *, "r6pf", *
+
+# D16/D4 rules
+# soft rules; assume 2880x2048, 1440x1024 formats with all frame rates D16/D4 pixel aspect ratio
+# removed from 7.0 -- remove comments to re-enable
+# 2880, 2048, *, *, * ~ 128/135, *, *, *, *, *
+# 1440, 1024, *, *, * ~ 128/135, *, *, *, *, *
+
+# HD / HDV rules
+# soft rule; Panasonic Varicam is 960x720
+# soft rule; Sony HDV is 1440x1080, upper field first
+# soft rule; assume HD dimensioned native mediacore formats are HDTV full swing
+960, 720, *, *, * ~ 1280/960/"HDV", *, *, *, *, *
+1440, 1080, 25, *, * ~ 1280/960/"HDV", U, *, *, *, *
+1440, 1080, 29.97, *, * ~ 1280/960/"HDV", U, *, *, *, *
+1280, 720, *, *, "v210" ~ *, *, *, *, "r7hf", *
+1280, 720, *, *, "UYVY" ~ *, *, *, *, "r7hf", *
+1280, 720, *, *, "2vuy" ~ *, *, *, *, "r7hf", *
+1920, 1080, *, *, "v210" ~ *, *, *, *, "r7hf", *
+1920, 1080, *, *, "UYVY" ~ *, *, *, *, "r7hf", *
+1920, 1080, *, *, "2vuy" ~ *, *, *, *, "r7hf", *
+
+# soft rule; assume HDV formats are HDTV full swing
+*, *, *, *, "hdv1" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv2" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv3" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv4" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv5" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv6" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv7" ~ *, *, *, *, "r7hf", *
+
+# assume NTSC DV is D1 aspect, lower-field
+# <obsolete rules -- superceded by soft rules above>
+# 720, 480, 29.97, "MooV", "dvc " = 10/11, L, *, *, *, *
+# 720, 480, 29.97, "MooV", "dvpn" = 10/11, L, *, *, *, *
+# 720, 480, 29.97, ".AVI", "dvsd" = 10/11, L, *, *, *, *
+
+# soft rule: tag Cineon files with Kodak 5218 profile
+# remove comment below to enable
+# *, *, *, "sDPX", * ~ *, *, *, *, "ginp", *
+
+# soft rule: tag all Cineon files for now with Working RGB
+*, *, *, "sDPX", * ~ *, *, *, *, "wRGB", *
+
+# rule to make red raw files available as Rec709
+# with Gamma encoded 32bit float data
+*, *, *, "R3D ", * ~ *, *, *, *, "r7hf", 0
+
+# this soft rule should be the last in the list of soft rules
+# soft rule: tag all untagged footage with an sRGB profile
+*, *, *, *, * ~ *, *, *, *, "sRGB", *
+
+# hardware- and format-specific rules
+
+# Media 100 640 x 480 is square-pixel, upper-field first
+640, 480, 29.97, "MooV", "dtmt" = 1/1, U, *, *, *, *
+
+# Media 100 Finish 720 x 486 is D1-pixel-aspect, lower-field first
+720, 486, 29.97, "MooV", "dtNT" = 10/11, L, *, *, *, *
+
+# assume Matrox DigiSuite is D1-pixel-aspect, lower-field first
+720, 486, 29.97, ".AVI", "MJPG" = 10/11, L, *, *, *, *
+
+# assume Pinnacle Targa 3000 YUV is D1-pixel-aspect, lower-field first
+720, 486, 29.97, ".AVI", "UYVY" = 10/11, L, *, *, *, *
+
+# Media 100 Mac 720 x 486 is field-labeled by Media 100, and
+# can be upper or lower depending on the hardware, but
+# uncomment the next line to force D1, lower-field first
+# 720, 486, 29.97, "MooV", "dtmt" = 10/11, L, *, *, *, *
+
+# Avid 640x480 is square-pixel, upper-field first
+640, 480, *, "MooV", "avr " = 1/1, U, *, *, *, *
+
+# Avid Meridien Codec NTSC is lower-field first
+720, 486, 29.97, *, "AVDJ" = 10/11, L, *, *, *, *
+720, 486, 29.97, *, "AVUI" = 10/11, L, *, *, *, *
+
+# Electric Image writes straight alpha files
+*, *, *, "EID2", * = *, *, *, S, *, *
+
+# OpenEXR is premultiplied by convention
+*, *, *, "oEXR", * ~ *, *, *, P, *, *
+
+# only adds a custom pixel aspect ratio to the popup in the Comp Settings & Interpret Footage
+# dialog boxes -- uncomment the next line to try it out
+# 0, 0, 0, "0000", * = 10/11/"Custom Aspect", *, *, *, *, *

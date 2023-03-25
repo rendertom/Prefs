@@ -1,0 +1,183 @@
+# "Interpretation Rules.txt"
+
+# Interpretación automática del material de archivo de Adobe After Effects
+
+# se permiten las líneas en blanco y las que comienzan con "#" son comentarios
+
+# formato básico de una regla dura {requisitos de coincidencia} = {definir interpretación}
+# formato básico de una regla blanda {requisitos de coincidencia} ~ {definir interpretación}
+
+# +por cada regla que coincide, se define la interpretación; se permiten caracteres comodín(*)
+#	en ambos lados; la coincidencia de los caracteres comodín no coincide con nada, la definición de los caracteres comodín no define nada
+# + se permite que coincidan varias reglas, las coincidencias posteriores anulan a las anteriores
+# + todas las reglas se escanean en orden, una regla por línea
+# + las reglas se aplican después de la proporción de píxeles, de la información de alfa y del campo de etiqueta
+#	la información se lee desde un archivo
+
+# + las reglas blandas no anularán valores que se especifican explícitamente mediante el formato de archivo
+#	formato o conjunto de reglas anteriores
+
+# anchura, altura, velocidad de fotogramas, tipo de archivo, códec =
+#	 proporción de aspecto de píxeles/nombre, orden de campo, conformar velocidad de fotogramas, interpretación alfa, código de perfil icc
+#	o descripción del perfil (una o la otra), luz lineal
+
+# la anchura y la altura son números enteros
+# la velocidad de fotogramas es un número decimal
+# el tipo de archivo tiene cuatro caracteres entre comillas (FourCC)
+# el códec (aplicable sólo para QT y AVI ) también presenta código FourCC
+
+# para averiguar el tipo de archivo y/o los cuatro caracteres (FourCC) del códec de un tipo específico de material de archivo,
+#	presione la tecla Opción (Mac) o Alt (Windows) y haga clic en el material de archivo de la ventana de proyecto,
+#	los códigos FourCC aparecerán en la última línea de texto de la miniatura
+
+# la proporción de aspecto de píxeles es una proporción de entero (p. ej. 10/11)
+#	seguida opcionalmente por un nombre para esta proporción (p.ej. 10/11/"Mi aspecto")
+# En After Effects CS4 (v9) hemos modificado las proporciones de aspecto de píxeles de varios formatos usuales:
+#	D1/DV NTSC De 648/720 (0,9) a 10,0/11,0 (0,9091 aprox.)
+#	D1/DV NTSC Pantalla ancha de 6/5 (1,2) a 40/33 (1,2121 aprox.)
+#	D1/DV PAL Desde 768/720 (1,07) a 768/702 (1,0940 aprox.)
+#	D1/DV PAL Pantalla ancha de 64/45 (1,42) a 1024,0/702,0 (1,4587 aprox.)
+
+# el orden de campo es sólo un carácter (F=fotograma, S=campo superior, I=campo inferior)
+# la velocidad de fotogramas ajustada es un número decimal
+# interpretación de alfa: (I=ignorar, R=recto, P=premul/negro, B=premul/blanco)
+#	la interpretación de alfa se omite para el material de archivo sin canal alfa
+
+# El perfil ICC se especifica mediante el código del perfil que tiene 4 caracteres o mediante
+#	descripción del perfil que es una cadena entre comillas con 255 caracteres como máximo más las comillas
+
+# Los códigos de perfil que se admiten son:
+#	- perfil de espacio de trabajo: "wRGB"
+#	- perfil incrustado: "embe"
+#	- conservar RGB: "pRGB" (tiene la misma función que la casilla de verificación Conservar RGB en el cuadro de diálogo Interpretar material de archivo)
+#	- sRGB: "sRGB"
+#	- Adobe RGB: "AS98"
+#	- Perfil de la película Kodak 5218: "ginp"
+#	- SDTV NTSC: "r6nf" (145 primarios SMPTE RP y rectángulo ITU-R. 709 TRCs. El negro se codifica como 0 y el blanco como 1).
+#	- SDTV NTSC 16-235: "r6ns" (145 primarios SMPTE RP y rectángulo ITU-R. 709 TRCs. El negro se codifica como 16/255 y el blanco como 235/255).
+#	- SDTV PAL: "r6pf" (3213 primarios EBU Tech. y rectángulo ITU-R 709 TRCs. El negro se codifica como 0 y el blanco como 1).
+#	- SDTV PAL 16-235: "r6ps" (3213 primarios EBU Tech. y rectángulo ITU-R 709 TRCs. El negro se codifica como 16/255 y el blanco como 235/255).
+#	- HDTV (Rectángulo 709): "r7hf" (709 primarios de rectángulo ITU-R y TRCs. El negro se codifica como 0 y el blanco como 1).
+#	- HDTV (Rectángulo 709) 16-235: "r7hs" (709 primarios de rectángulo ITU-R y TRCs. El negro se codifica como 16/255 y el blanco como 235/255).
+
+# La descripción del perfil se puede buscar en la IU (información de miniatura de ventana del proyecto) o en
+# la utilidad de color, como ColorSync o está definido por el usuario al crear un perfil personalizado
+
+# luz lineal es un número entero (0=desactivado; 1=activado, 2=activado para material de archivo de 32 bpc)
+
+# la regla blanda asume que ATSC 704x480 de cualquier formato es el aspecto D1
+704, 480, 29.97, *, * ~ 10/11, *, *, *, *, *
+
+# reglas NTSC
+# la regla blanda asume que los formatos de 720x480 29.97 fps son DV NTSC (inferior, aspecto NTSC D1/DV)
+# la regla blanda asume que los formatos de 720x480 con todas las velocidades de fotogramas tienen una proporción de aspecto de píxeles de NTSC DV/D1
+# la regla blanda asume que los formatos de 720x486 con todas las velocidades de fotogramas tienen una proporción de aspecto de píxeles de NTSC DV/D1
+# la regla blanda asume que los formatos de MediaCore nativos de 720x480 y 720x486 son SDTV NTSC
+# la regla blanda asume que los archivos DVCPro50 de 720x480 son SDTV NTSC
+720, 480, 29.97, *, * ~ 10/11, L, *, *, *, *
+720, 480, *, *, * ~ 10/11, *, *, *, *, *
+720, 486, *, *, * ~ 10/11, *, *, *, *, *
+720, 480, *, *, "dvc " ~ *, *, *, *, "r6nf", *
+720, 486, *, *, "v210" ~ *, *, *, *, "r6nf", *
+720, 486, *, *, "UYVY" ~ *, *, *, *, "r6nf", *
+720, 486, *, *, "2vuy" ~ *, *, *, *, "r6nf", *
+720, 480, *, *, "dv5n" ~ *, *, *, *, "r6nf", *
+
+# reglas PAL
+# la regla blanda asume que los formatos de 720x576 25 fps son DV PAL (inferior, aspecto PAL D1/DV)
+# la regla blanda asume que los formatos de 720x576 con todas las velocidades de fotogramas tienen una proporción de aspecto de píxeles de PAL DV/D1 
+# la regla blanda asume que los formatos de MediaCore nativos de 720x576 son SDTV PAL
+# la regla blanda asume que los archivos DVCPro50 de 720x576 son SDTV PAL
+720, 576, 25, *, * ~ 768/702, L, *, *, *, *
+720, 576, *, *, * ~ 768/702, *, *, *, *, *
+720, 576, *, *, "dvcp" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "v210" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "UYVY" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "2vuy" ~ *, *, *, *, "r6pf", *
+720, 576, *, *, "dv5p" ~ *, *, *, *, "r6pf", *
+
+# reglas D16/D4
+# las reglas blandas asumen que los formatos 2880x2048 y 1440x1024 con todas las velocidades de fotogramas tienen una proporción de aspecto de píxeles D16/D4
+# quitado desde 7.0: quitar comentarios para volver a habilitarlo
+# 2880, 2048, *, *, * ~ 128/135, *, *, *, *, *
+# 1440, 1024, *, *, * ~ 128/135, *, *, *, *, *
+
+# reglas HD/HDV
+# regla blanda; Panasonic Varicam es 960x720
+# regla blanda; Sony HDV es 1440x1080, primero el campo superior
+# la regla blanda asume que los formatos de MediaCore nativos con dimensiones HD son HDTV Full Swing
+960, 720, *, *, * ~ 1280/960/"HDV", *, *, *, *, *
+1440, 1080, 25, *, * ~ 1280/960/"HDV", U, *, *, *, *
+1440, 1080, 29.97, *, * ~ 1280/960/"HDV", U, *, *, *, *
+1280, 720, *, *, "v210" ~ *, *, *, *, "r7hf", *
+1280, 720, *, *, "UYVY" ~ *, *, *, *, "r7hf", *
+1280, 720, *, *, "2vuy" ~ *, *, *, *, "r7hf", *
+1920, 1080, *, *, "v210" ~ *, *, *, *, "r7hf", *
+1920, 1080, *, *, "UYVY" ~ *, *, *, *, "r7hf", *
+1920, 1080, *, *, "2vuy" ~ *, *, *, *, "r7hf", *
+
+# la regla blanda asume que los formatos de HDV son HDTV Full Swing
+*, *, *, *, "hdv1" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv2" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv3" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv4" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv5" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv6" ~ *, *, *, *, "r7hf", *
+*, *, *, *, "hdv7" ~ *, *, *, *, "r7hf", *
+
+# se asume que NTSC DV es aspecto D1, campo inferior
+# <reglas obsoletas; se sustituyen con las reglas blandas anteriores>
+# 720, 480, 29.97, "MooV", "dvc " = 10/11, L, *, *, *, *
+# 720, 480, 29.97, "MooV", "dvpn" = 10/11, L, *, *, *, *
+# 720, 480, 29.97, ".AVI", "dvsd" = 10/11, L, *, *, *, *
+
+# regla blanda: etiqueta los archivos Cineon con el perfil Kodak 5218
+# quitar el comentario de más abajo para habilitarlo
+# *, *, *, "sDPX", * ~ *, *, *, *, "ginp", *
+
+# regla blanda: etiqueta todos los archivos Cineon con RGB ocupado por ahora
+*, *, *, "sDPX", * ~ *, *, *, *, "wRGB", *
+
+# regla para hacer los archivos Raw rojos disponibles como Rec709
+# con datos flotantes de 32 bits codificados con gamma
+*, *, *, "R3D ", * ~ *, *, *, *, "r7hf", 0
+
+# esta regla blanda debe ser la última de la lista de reglas blandas
+# regla blanda: etiquetar todo el material de archivo que no esté etiquetado con un perfil sRGB
+*, *, *, *, * ~ *, *, *, *, "sRGB", *
+
+# reglas específicas de hardware y formato
+
+# Media 100 de 640x480 tiene píxeles cuadrados y primero el campo superior
+640, 480, 29.97, "MooV", "dtmt" = 1/1, U, *, *, *, *
+
+# Media 100 Finish de 720x486 tiene aspecto de píxeles D1, primero el campo inferior
+720, 486, 29.97, "MooV", "dtNT" = 10/11, L, *, *, *, *
+
+# asume que Matrox DigiSuite tiene aspecto de píxeles D1, primero el campo inferior
+720, 486, 29.97, ".AVI", "MJPG" = 10/11, L, *, *, *, *
+
+# asume que Pinnacle Targa 3000 YUV tiene aspecto de píxeles D1, primero el campo inferior
+720, 486, 29.97, ".AVI", "UYVY" = 10/11, L, *, *, *, *
+
+# Media 100 Mac de 720x486 tiene las etiquetas de campo de Media 100 y
+# puede ser superior o inferior dependiendo del hardware, pero
+# sin comentarios en la siguiente línea para forzar D1, primero el campo inferior
+# 720, 486, 29.97, "MooV", "dtmt" = 10/11, L, *, *, *, *
+
+# Avid 640x480 tiene píxeles cuadrados, primero el campo superior
+640, 480, *, "MooV", "avr " = 1/1, U, *, *, *, *
+
+# códec Avid Meridien NTSC, primero el campo inferior
+720, 486, 29.97, *, "AVDJ" = 10/11, L, *, *, *, *
+720, 486, 29.97, *, "AVUI" = 10/11, L, *, *, *, *
+
+# Electric Image escribe archivos alfa directos
+*, *, *, "EID2", * = *, *, *, S, *, *
+
+# OpenEXR se multiplica previamente por la convención
+*, *, *, "oEXR", * ~ *, *, *, P, *, *
+
+# sólo agrega una proporción de aspecto de píxeles personalizada a la ventana emergente de Ajustes de la composición e Interpretar material de archivo
+# cuadros de diálogo: sin comentar la línea siguiente para probarla
+# 0, 0, 0, "0000", * = 10/11/"Custom Aspect", *, *, *, *, *
