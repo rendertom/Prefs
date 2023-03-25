@@ -8,29 +8,42 @@ var Prefs = (function () {
   var module = {};
 
   var MAP = {
-    PREF_Type_MACHINE_INDEPENDENT: '*-indep-general.txt',
-    PREF_Type_MACHINE_INDEPENDENT_COMPOSITION: '*-indep-composition.txt',
-    PREF_Type_MACHINE_INDEPENDENT_OUTPUT: '*-indep-output.txt',
-    PREF_Type_MACHINE_INDEPENDENT_RENDER: '*-indep-render.txt',
-    PREF_Type_MACHINE_SPECIFIC: 'Prefs.txt',
-    PREF_Type_MACHINE_SPECIFIC_PAINT: '*-paint.txt',
-    PREF_Type_MACHINE_SPECIFIC_TEXT: '*-text.txt',
+    PREF_Type_MACHINE_INDEPENDENT: '*-indep-general*',
+    PREF_Type_MACHINE_INDEPENDENT_COMPOSITION: '*-indep-composition*',
+    PREF_Type_MACHINE_INDEPENDENT_OUTPUT: '*-indep-output*',
+    PREF_Type_MACHINE_INDEPENDENT_RENDER: '*-indep-render*',
+    PREF_Type_MACHINE_SPECIFIC: 'Prefs*',
+    PREF_Type_MACHINE_SPECIFIC_PAINT: '*-paint*',
+    PREF_Type_MACHINE_SPECIFIC_TEXT: '*-text*',
   };
 
   module.getFile = function (PREFType) {
     app.preferences.saveToDisk();
 
     var files = module.getFiles(PREFType);
-    if (files.length === 0) {
-      throw new Error('Could not find Preferences file');
-    }
-
     files.sort(sortByDate);
+
     return files[0];
   };
 
   module.getFiles = function (PREFType) {
-    return module.getFolder().getFiles(getFilter(PREFType));
+    var folder = module.getFolder();
+    if (!folder.exists) {
+      throw new Error('Preferences folder does not exist at path ' + folder.fsName);
+    }
+
+    var filter = getFilter(PREFType);
+    var files = folder.getFiles(filter);
+    if (files.length === 0) {
+      throw new Error(
+        'Could not find files with filter "' +
+          filter +
+          '" in Preferences folder at path ' +
+          folder.fsName
+      );
+    }
+
+    return files;
   };
 
   module.getFolder = function () {
@@ -52,7 +65,15 @@ var Prefs = (function () {
   }
 
   function getAppVersion() {
-    return parseFloat(app.version).toFixed(1);
+    var version = app.version.split('x')[0];
+    if (version === '22.6.4') return version; // One time bug introduced by Adobe
+
+    var items = version.split('.');
+    var major = items[0];
+    var minor = items[1] || 0;
+    var patch = items[2] || 0;
+
+    return [major, minor].join('.');
   }
 
   function getFilter(PREFType) {
@@ -62,13 +83,11 @@ var Prefs = (function () {
       throw new Error('PREFType ' + PREFType + ' does not exist');
     }
 
-    return 'Adobe After Effects ' + getAppVersion() + ' ' + MAP[PREFType];
+    return MAP[PREFType];
   }
 
   function getRootFolder() {
-    return Os.isWindows()
-      ? Folder.userData.fsName
-      : Folder.userData.parent.fsName + '/Preferences';
+    return Os.isWindows() ? Folder.userData.fsName : Folder.userData.parent.fsName + '/Preferences';
   }
 
   function isComment(string) {
@@ -102,9 +121,7 @@ var Prefs = (function () {
 
         var match = line.match(/^(".*?")( = )(.*)/);
         if (!match || match.length !== 4) {
-          throw new Error(
-            'Could not parse key-value from line\n' + line
-          );
+          throw new Error('Could not parse key-value from line\n' + line);
         }
 
         var key = StringEx.unquote(match[1]);
