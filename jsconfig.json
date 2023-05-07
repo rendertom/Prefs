@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "ignoreDeprecations": "5.0",
+    "module": "commonjs",
+    "target": "ES3",
+  },
+  "include": ["./**/*"]
+}
